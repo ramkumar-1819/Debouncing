@@ -1,23 +1,35 @@
-import logo from './logo.svg';
+import React, { useState, useRef } from 'react';
+
 import './App.css';
 
 function App() {
+  const inputRef = useRef();
+  const [controlValue, setControlValue] = useState('');
+
+  const changeValue = (e) => {
+    const { value } = e.target;
+    clearTimeout(inputRef.current);
+    inputRef.current = setTimeout(()=>{
+      console.log('Debounce Value', value);
+    },1000)
+  };
+
+  const changeValueControlled = (e) => {
+    const { value } = e.target;
+    setControlValue(value);
+    changeValue(e);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        <label htmlFor='unControl'>UnControlled Input</label>
+        <input type='text' id='unControl' ref={inputRef} onChange={changeValue} />
+      </div>
+      <div>
+        <label htmlFor='control'>Controlled Input</label>
+        <input type='text' id='control' value={controlValue} onChange={changeValueControlled} />
+      </div>
     </div>
   );
 }
